@@ -15,21 +15,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.airecipegenerator.ui.screens.home.HomeScreen
+import com.example.airecipegenerator.ui.screens.profile.ProfileScreen
+import com.example.airecipegenerator.ui.screens.recipes.RecipesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val topLevelRoutesList = topLevelRoutes.map { it.route }
 
-
-    Scaffold(
-        bottomBar = {
+    Scaffold(bottomBar = {
+        if (currentDestination?.route in topLevelRoutesList) {
             NavigationBar {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
                 topLevelRoutes.forEach { topLevelRoute ->
-                    NavigationBarItem(
-                        selected = currentDestination?.hierarchy?.any { it.route == topLevelRoute.route } == true,
+                    NavigationBarItem(selected = currentDestination?.hierarchy?.any { it.route == topLevelRoute.route } == true,
                         onClick = {
                             navController.navigate(topLevelRoute.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -38,13 +40,14 @@ fun AppNavigation() {
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        }, icon = {
+                        },
+                        icon = {
                             Icon(topLevelRoute.icon, contentDescription = topLevelRoute.name)
                         })
                 }
             }
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "home",
@@ -52,7 +55,15 @@ fun AppNavigation() {
         ) {
 
             composable("home") {
+                HomeScreen(navController)
+            }
 
+            composable("recipes") {
+                RecipesScreen(navController)
+            }
+
+            composable("profile") {
+                ProfileScreen(navController)
             }
         }
     }

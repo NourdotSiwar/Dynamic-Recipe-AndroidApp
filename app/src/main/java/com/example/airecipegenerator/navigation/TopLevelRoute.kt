@@ -11,5 +11,5 @@ data class TopLevelRoute(val name: String, val route: String, val icon: ImageVec
 val topLevelRoutes = listOf(
     TopLevelRoute("Home","home", Icons.Default.Home),
     TopLevelRoute("Saved Recipes","recipes",Icons.Default.List),
-    TopLevelRoute("Profile","profile",Icons.Default.AccountCircle)
+   // TopLevelRoute("Profile","profile",Icons.Default.AccountCircle)
 )
